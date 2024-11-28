@@ -40,8 +40,8 @@ Allow automated i18n_sync and lmo compilation.
 ./i18n_update_helper_core.sh [OPTIONS] <luci_app_dir> <luci_src_dir>
 
 Options:
-    --s, --sync     ONLY sync i18n files (default if no option provided)
-    --c, --compile  ONLY compile .po files to .lmo files
+    -s, --sync     ONLY sync i18n files (default if no option provided)
+    -c, --compile  ONLY compile .po files to .lmo files
 
 Arguments:
     luci_app_dir:  LuCI application directory path

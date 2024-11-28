@@ -5,8 +5,8 @@ set -e
 print_usage() {
     echo "Usage: $0 [OPTIONS] <luci_app_dir> <luci_src_dir>"
     echo "Options:"
-    echo "  --s, --sync     ONLY sync i18n files (default if no option provided, override --compile if both provided)"
-    echo "  --c, --compile  ONLY compile .po files to .lmo files"
+    echo "  -s, --sync     ONLY sync i18n files (default if no option provided, override --compile if both provided)"
+    echo "  -c, --compile  ONLY compile .po files to .lmo files"
     echo "Arguments:"
     echo "  luci_app_dir:  LuCI application directory path"
     echo "  luci_src_dir:  LuCI source directory path. Commonly .../openwrt/feeds/luci"
@@ -19,12 +19,12 @@ DO_COMPILE=0
 POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --s|--sync)
+        -s|--sync)
             DO_SYNC=1
             DO_COMPILE=0
             shift
             ;;
-        --c|--compile)
+        -c|--compile)
             DO_SYNC=0
             DO_COMPILE=1
             shift
