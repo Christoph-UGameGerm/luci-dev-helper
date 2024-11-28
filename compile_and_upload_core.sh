@@ -30,6 +30,9 @@ while getopts "t:p:r:h" opt; do
             ;;
         r)
             router_ssh_path=$OPTARG
+            if [[ "$router_ssh_path" != *: ]]; then
+                router_ssh_path="${router_ssh_path}:"
+            fi
             ;;
         h)
             usage
@@ -39,6 +42,11 @@ while getopts "t:p:r:h" opt; do
             ;;
     esac
 done
+
+if [ $# -ne 6 ]; then
+    usage
+    exit 1
+fi
 
 if [[ ! -d "${openwrt_path}" ]]; then
     echo "Indicated OpenWrt env path does not exist, please check the script"
@@ -56,6 +64,13 @@ echo "Installing from feeds..."
 ./scripts/feeds install -a
 echo "Start building..."
 make package/${target_app}/{clean,compile}
+if [ $? -eq 1 ]; then
+    echo "Compilation failed, trying to make with V=s..."
+    make package/${target_app}/clean V=s
+    make package/${target_app}/compile V=s
+    exit 1
+fi
+
 echo "Building Complete, start ipk existence check..."
 
 target_app_name=$(basename ${target_app})
@@ -68,5 +83,10 @@ fi
 echo "Check passed, start scp uploading..."
 
 scp ${target_app_ipk_path} ${router_ssh_path}
-echo "Compilation and Upload Done."
-exit 0
+if [ $? -eq 0 ]; then
+    echo "Compilation and Upload Done."
+    exit 0
+else
+    echo "Upload failed, please try manually or check your router path."
+    exit 1
+fi
